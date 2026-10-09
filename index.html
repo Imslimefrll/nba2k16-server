@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA 2K16 - MyCareer Manager PRO</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #fff; 
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #000;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        
+        .header h1 { font-size: 32px; margin-bottom: 5px; }
+        .header p { font-size: 14px; opacity: 0.8; }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        .top-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #333 0%, #444 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffd700;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stat-box h3 { color: #ffd700; font-size: 14px; margin-bottom: 8px; }
+        .stat-box .value { font-size: 28px; font-weight: bold; }
+        
+        .tabs { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            border-bottom: 2px solid #444;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .tab-button { 
+            padding: 12px 20px; 
+            background: #333; 
+            border: none; 
+            color: #fff; 
+            cursor: pointer; 
+            font-size: 14px;
+            border-radius: 4px 4px 0 0;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+        
+        .tab-button:hover { background: #444; }
+        .tab-button.active { 
+            background: #ffd700; 
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .form-section {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+        
+        .form-section h3 { color: #ffd700; margin-bottom: 15px; }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group { }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold;
+            font-size: 13px;
+            color: #aaa;
+        }
+        
+        input, select, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            background: #444; 
+            border: 1px solid #555; 
+            color: #fff;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button { 
+            padding: 10px 20px; 
+            background: #ffd700; 
+            color: #000; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+        
+        button:hover { 
+            background: #ffed4e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+        }
+        
+        button.secondary {
+            background: #666;
+            color: #fff;
+        }
+        
+        button.secondary:hover {
+            background: #777;
+            box-shadow: 0 4px 8px rgba(100, 100, 100, 0.2);
+        }
+        
+        button.danger {
+            background: #dc3545;
+        }
+        
+        button.danger:hover {
+            background: #e74c3c;
+        }
+        
+        .data-list { margin-top: 20px; }
+        
+        .data-item { 
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            padding: 15px; 
+            margin-bottom: 10px; 
+            border-radius: 6px;
+            border-left: 4px solid #ffd700;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .data-item:hover {
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .data-item h3 { color: #ffd700; margin-bottom: 8px; font-size: 16px; }
+        .data-item p { font-size: 13px; color: #bbb; margin-bottom: 5px; }
+        
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .item-actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .progress-bar {
+            background: #444;
+            height: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            background: #333;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #444;
+        }
+        
+        .search-box input {
+            margin: 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #ffd700;
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .badge.gold { background: #ffd700; }
+        .badge.silver { background: #c0c0c0; color: #000; }
+        .badge.bronze { background: #cd7f32; color: #fff; }
+        .badge.platinum { background: #e5e4e2; color: #000; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .stat-item {
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .stat-item .label { font-size: 11px; color: #999; }
+        .stat-item .value { font-size: 16px; color: #ffd700; font-weight: bold; }
+        
+        .loading { text-align: center; color: #999; padding: 20px; }
+        .error { background: #dc3545; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+        .success { background: #28a745; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏀 NBA 2K16 - MyCareer Manager PRO</h1>
+        <p>Complete Career Management System</p>
+    </div>
+    
+    <div class="container">
+        <!-- TOP STATS -->
+        <div class="top-stats">
+            <div class="stat-box">
+                <h3>Total Players</h3>
+                <div class="value" id="totalPlayers">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Teams</h3>
+                <div class="value" id="totalTeams">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Games Played</h3>
+                <div class="value" id="totalGames">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Hall of Fame</h3>
+                <div class="value" id="hallOfFameCount">0</div>
+            </div>
+        </div>
+        
+        <!-- MESSAGE DISPLAY -->
+        <div id="messageBox"></div>
+        
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('players')">👥 Players</button>
+            <button class="tab-button" onclick="switchTab('teams')">🏢 Teams</button>
+            <button class="tab-button" onclick="switchTab('seasons')">📅 Seasons</button>
+            <button class="tab-button" onclick="switchTab('games')">🎮 Games</button>
+            <button class="tab-button" onclick="switchTab('mycareer')">⭐ MyCareer</button>
+            <button class="tab-button" onclick="switchTab('trades')">🔄 Trades</button>
+            <button class="tab-button" onclick="switchTab('injuries')">🏥 Injuries</button>
+            <button class="tab-button" onclick="switchTab('endorsements')">💰 Endorsements</button>
+            <button class="tab-button" onclick="switchTab('achievements')">🏆 Achievements</button>
+            <button class="tab-button" onclick="switchTab('leaderboard')">📊 Leaderboard</button>
+            <button class="tab-button" onclick="switchTab('halloffame')">👑 Hall of Fame</button>
+        </div>
+
+        <!-- PLAYERS TAB -->
+        <div id="players" class="tab-content active">
+            <div class="form-section">
+                <h3>Create New Player</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Player Name *</label>
+                        <input type="text" id="playerName" placeholder="e.g., LeBron James">
+                    </div>
+                    <div class="form-group">
+                        <label>Overall Rating (0-99)</label>
+                        <input type="number" id="playerOverall" placeholder="75" min="0" max="99" value="75">
+                    </div>
+                    <div class="form-group">
+                        <label>Position</label>
+                        <select id="playerPosition">
+                            <option value="PG">Point Guard (PG)</option>
+                            <option value="SG">Shooting Guard (SG)</option>
+                            <option value="SF">Small Forward (SF)</option>
+                            <option value="PF">Power Forward (PF)</option>
+                            <option value="C">Center (C)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Height</label>
+                        <input type="text" id="playerHeight" placeholder="6'5\"" value="6'5\"">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (lbs)</label>
+                        <input type="number" id="playerWeight" placeholder="210" min="150" max="300" value="210">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="createPlayer()">Create Player</button>
+                </div>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="playerSearch" placeholder="Search players..." onkeyup="filterPlayers()">
+            </div>
+
+            <div id="playersList" class="data-list"></div>
+        </div>
+
+        <!-- TEAMS TAB -->
+        <div id="teams" class="tab-content">
+            <div class="form-section">
+                <h3>Create New Team</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Team Name *</label>
+                        <input type="text" id="teamName" placeholder="e.g., Lakers">
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="teamCity" placeholder="e.g., Los Angeles">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="createTeam()">Create Team</button>
+                </div>
+            </div>
+
+            <div id="teamsList" class="data-list"></div>
+        </div>
+
+        <!-- SEASONS TAB -->
+        <div id="seasons" class="tab-content">
+            <div class="form-section">
+                <h3>Create New Season</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Season Year</label>
+                        <input type="number" id="seasonYear" placeholder="2016" min="2000" value="2016">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="createSeason()">Create Season</button>
+                </div>
+            </div>
+
+            <div id="seasonsList" class="data-list"></div>
+        </div>
+
+        <!-- GAMES TAB -->
+        <div id="games" class="tab-content">
+            <div class="form-section">
+                <h3>Create Game</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Home Team ID</label>
+                        <input type="number" id="gameHomeTeam" placeholder="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Away Team ID</label>
+                        <input type="number" id="gameAwayTeam" placeholder="2" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Home Score</label>
+                        <input type="number" id="gameHomeScore" placeholder="100" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Away Score</label>
+                        <input type="number" id="gameAwayScore" placeholder="95" min="0">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="createGame()">Create Game</button>
+                </div>
+            </div>
+
+            <div id="gamesList" class="data-list"></div>
+        </div>
+
+        <!-- MYCAREER TAB -->
+        <div id="mycareer" class="tab-content">
+            <div class="form-section">
+                <h3>Create MyCareer Character</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Character Name</label>
+                        <input type="text" id="careerName" placeholder="Your player name">
+                    </div>
+                    <div class="form-group">
+                        <label>Player ID</label>
+                        <input type="number" id="careerId" placeholder="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Starting Overall</label>
+                        <input type="number" id="careerOverall" placeholder="60" min="0" max="99" value="60">
+                    </div>
+                    <div class="form-group">
+                        <label>Starting Salary ($)</label>
+                        <input type="number" id="careerSalary" placeholder="500000" value="500000">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="createCareer()">Create Career</button>
+                </div>
+            </div>
+
+            <div id="careersList" class="data-list"></div>
+        </div>
+
+        <!-- TRADES TAB -->
+        <div id="trades" class="tab-content">
+            <div class="form-section">
+                <h3>Execute Trade</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Player ID to Trade</label>
+                        <input type="number" id="tradePlayerId" placeholder="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>From Team ID</label>
+                        <input type="number" id="tradeFromTeam" placeholder="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>To Team ID</label>
+                        <input type="number" id="tradeToTeam" placeholder="2" min="1">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="createTrade()">Execute Trade</button>
+                </div>
+            </div>
+
+            <div id="tradesList" class="data-list"></div>
+        </div>
+
+        <!-- INJURIES TAB -->
+        <div id="injuries" class="tab-content">
+            <div class="form-section">
+                <h3>Record Injury</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Player ID</label>
+                        <input type="number" id="injuryPlayerId" placeholder="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Injury Type</label>
+                        <select id="injuryType">
+                            <option value="minor">Minor</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="severe">Severe</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Games Out</label>
+                        <input type="number" id="injuryGamesOut" placeholder="5" min="1">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="recordInjury()">Record Injury</button>
+                </div>
+            </div>
+
+            <div id="injuriesList" class="data-list"></div>
+        </div>
+
+        <!-- ENDORSEMENTS TAB -->
+        <div id="endorsements" class="tab-content">
+            <div class="form-section">
+                <h3>Add Endorsement Deal</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Player ID</label>
+                        <input type="number" id="endorsementPlayerId" placeholder="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Brand Name</label>
+                        <input type="text" id="endorsementBrand" placeholder="e.g., Nike, Gatorade">
+                    </div>
+                    <div class="form-group">
+                        <label>Deal Value ($)</label>
+                        <input type="number" id="endorsementValue" placeholder="100000" min="0">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="addEndorsement()">Add Endorsement</button>
+                </div>
+            </div>
+
+            <div id="endorsementsList" class="data-list"></div>
+        </div>
+
+        <!-- ACHIEVEMENTS TAB -->
+        <div id="achievements" class="tab-content">
+            <div class="form-section">
+                <h3>Unlock Achievement</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Player ID</label>
+                        <input type="number" id="achievementPlayerId" placeholder="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Achievement Name</label>
+                        <input type="text" id="achievementName" placeholder="e.g., First 50-Point Game">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="achievementDesc" placeholder="Achievement details">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="unlockAchievement()">Unlock Achievement</button>
+                </div>
+            </div>
+
+            <div id="achievementsList" class="data-list"></div>
+        </div>
+
+        <!-- LEADERBOARD TAB -->
+        <div id="leaderboard" class="tab-content">
+            <div class="form-section">
+                <h3>Top Players</h3>
+                <button onclick="loadLeaderboard()" class="secondary">Refresh Leaderboard</button>
+            </div>
+
+            <div id="leaderboardList" class="data-list"></div>
+        </div>
+
+        <!-- HALL OF FAME TAB -->
+        <div id="halloffame" class="tab-content">
+            <div class="form-section">
+                <h3>Induct to Hall of Fame</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Player ID</label>
+                        <input type="number" id="hofPlayerId" placeholder="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Legacy Score</label>
+                        <input type="number" id="hofLegacyScore" placeholder="5000" min="0">
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="inductToHOF()">Induct to Hall of Fame</button>
+                </div>
+            </div>
+
+            <div id="hofList" class="data-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+
+        // ===================== UTILITY FUNCTIONS =====================
+        function showMessage(message, type = 'success') {
+            const box = document.getElementById('messageBox');
+            box.innerHTML = `<div class="${type}">${message}</div>`;
+            setTimeout(() => { box.innerHTML = ''; }, 3000);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            loadData(tabName);
+            updateStats();
+        }
+
+        async function updateStats() {
+            try {
+                const playersRes = await fetch(`${API_URL}/players/`);
+                const players = await playersRes.json();
+                document.getElementById('totalPlayers').textContent = players.length;
+
+                const teamsRes = await fetch(`${API_URL}/teams/`);
+                const teams = await teamsRes.json();
+                document.getElementById('totalTeams').textContent = teams.length;
+
+                const gamesRes = await fetch(`${API_URL}/games/`);
+                const games = await gamesRes.json();
+                document.getElementById('totalGames').textContent = games.length;
+
+                const hofRes = await fetch(`${API_URL}/hall-of-fame/`);
+                const hof = await hofRes.json();
+                document.getElementById('hallOfFameCount').textContent = hof.length;
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+
+        // ===================== PLAYERS =====================
+        async function createPlayer() {
+            const name = document.getElementById('playerName').value;
+            const overall = parseInt(document.getElementById('playerOverall').value) || 75;
+            const position = document.getElementById('playerPosition').value;
+            const height = document.getElementById('playerHeight').value;
+            const weight = parseInt(document.getElementById('playerWeight').value) || 210;
+
+            if (!name) { showMessage('Player name required', 'error'); return; }
+
+            try {
+                const response = await fetch(`${API_URL}/players/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, overall, position, height, weight })
+                });
+                if (response.ok) {
+                    showMessage('✅ Player created successfully!');
+                    document.getElementById('playerName').value = '';
+                    document.getElementById('playerOverall').value = '75';
+                    loadData('players');
+                }
+            } catch (error) {
+                showMessage('Error creating player', 'error');
+            }
+        }
+
+        function filterPlayers() {
+            const search = document.getElementById('playerSearch').value.toLowerCase();
+            const items = document.querySelectorAll('#playersList .data-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(search) ? 'block' : 'none';
+            });
+        }
+
+        async function deletePlayer(id) {
+            if (confirm('Delete this player?')) {
+                try {
+                    await fetch(`${API_URL}/players/${id}`, { method: 'DELETE' });
+                    showMessage('✅ Player deleted');
+                    loadData('players');
+                } catch (error) {
+                    showMessage('Error deleting player', 'error');
+                }
+            }
+        }
+
+        // ===================== TEAMS =====================
+        async function createTeam() {
+            const name = document.getElementById('teamName').value;
+            const city = document.getElementById('teamCity').value;
+
+            if (!name || !city) { showMessage('Team name and city required', 'error'); return; }
+
+            try {
+                const response = await fetch(`${API_URL}/teams/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, city, wins: 0, losses: 0 })
+                });
+                if (response.ok) {
+                    showMessage('✅ Team created successfully!');
+                    document.getElementById('teamName').value = '';
+                    document.getElementById('teamCity').value = '';
+                    loadData('teams');
+                }
+            } catch (error) {
+                showMessage('Error creating team', 'error');
+            }
+        }
+
+        async function deleteTeam(id) {
+            if (confirm('Delete this team?')) {
+                try {
+                    await fetch(`${API_URL}/teams/${id}`, { method: 'DELETE' });
+                    showMessage('✅ Team deleted');
+                    loadData('teams');
+                } catch (error) {
+                    showMessage('Error deleting team', 'error');
+                }
+            }
+        }
+
+        // ===================== SEASONS =====================
+        async function createSeason() {
+            const year = parseInt(document.getElementById('seasonYear').value) || 2016;
+
+            try {
+                const response = await fetch(`${API_URL}/seasons/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ year })
+                });
+                if (response.ok) {
+                    showMessage('✅ Season created successfully!');
+                    loadData('seasons');
+                }
+            } catch (error) {
+                showMessage('Error creating season', 'error');
+            }
+        }
+
+        // ===================== GAMES =====================
+        async function createGame() {
+            const homeTeamId = parseInt(document.getElementById('gameHomeTeam').value);
+            const awayTeamId = parseInt(document.getElementById('gameAwayTeam').value);
+            const homeScore = parseInt(document.getElementById('gameHomeScore').value);
+            const awayScore = parseInt(document.getElementById('gameAwayScore').value);
+
+            if (!homeTeamId || !awayTeamId || !homeScore || !awayScore) {
+                showMessage('All game fields required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/games/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ home_team_id: homeTeamId, away_team_id: awayTeamId, home_score: homeScore, away_score: awayScore })
+                });
+                if (response.ok) {
+                    showMessage('✅ Game created! Teams updated.');
+                    document.getElementById('gameHomeTeam').value = '';
+                    document.getElementById('gameAwayTeam').value = '';
+                    document.getElementById('gameHomeScore').value = '';
+                    document.getElementById('gameAwayScore').value = '';
+                    loadData('games');
+                }
+            } catch (error) {
+                showMessage('Error creating game', 'error');
+            }
+        }
+
+        async function deleteGame(id) {
+            if (confirm('Delete this game?')) {
+                try {
+                    await fetch(`${API_URL}/games/${id}`, { method: 'DELETE' });
+                    showMessage('✅ Game deleted');
+                
